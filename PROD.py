@@ -9,7 +9,7 @@ def get_ip():
     IP = 0
     while not IP:
         try:
-            IP = json.loads(requests.get('https://api.ipify.org?format=json').text)['ip']
+            IP = json.loads(requests.get('https://api.ipify.org?format=json').text)['ip']   
         except:
             continue
     return IP

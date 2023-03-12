@@ -14,15 +14,15 @@ REDIS_CLIENT = redis.Redis(host='localhost', port=6379, db=0)           # Connec
 cache = Cache()
 
 
-def get_ip(redis_client=REDIS_CLIENT):
+def get_ip(redis_client=REDIS_CLIENT):              # get IP from API
     IP = redis_client.get("IP")
-    while not IP:
-        try:
-            redis_client.set('IP', json.loads(requests.get('https://api.ipify.org?format=json').text)['ip'])
-            IP = redis_client.get("IP")
+    while not IP:               # try getting IP until get
+        try: 
+            redis_client.set('IP', json.loads(requests.get('https://api.ipify.org?format=json').text)['ip'])        # binary json ==> dict ==> binary object ==> redis cache
+            IP = redis_client.get("IP")         # get IP value from redis
         except:
             continue
-    return IP.decode()
+    return IP.decode()      # binary IP ==> string IP
 
 
 def create_app(redis_client=REDIS_CLIENT, IP=get_ip()):
@@ -30,8 +30,8 @@ def create_app(redis_client=REDIS_CLIENT, IP=get_ip()):
     app.config["CACHE_TYPE"] = "SimpleCache"
     cache.init_app(app)
 
-    @app.route("/a")
-    @cache.cached(timeout=40)
+    @app.route("/")
+    @cache.cached(timeout=40)                       
     def index(redis_client=redis_client, IP=IP):
         return f"<h1>Your current IP is: {IP}</h1>"
     
