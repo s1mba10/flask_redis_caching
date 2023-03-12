@@ -5,6 +5,10 @@ from flask import Flask
 from flask_caching import Cache
 import redis
 
+"""
+Pros: possibility of changing Redis keys' names
+Cons: double caching ==> Redis + SimpleCaching
+"""
 
 REDIS_CLIENT = redis.Redis(host='localhost', port=6379, db=0)           # Connect to redis server
 cache = Cache()
@@ -23,7 +27,7 @@ def get_ip(redis_client=REDIS_CLIENT):
 
 def create_app(redis_client=REDIS_CLIENT, IP=get_ip()):
     app = Flask(__name__)
-    app.config["CACHE_TYPE"] = "RedisCache"
+    app.config["CACHE_TYPE"] = "SimpleCache"
     cache.init_app(app)
 
     @app.route("/a")

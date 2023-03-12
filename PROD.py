@@ -1,6 +1,6 @@
 import json
-import requests
 # -----------------------------
+import requests
 from flask import Flask
 from flask_caching import Cache
 
